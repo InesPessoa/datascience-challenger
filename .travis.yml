@@ -12,9 +12,7 @@ node_js:
     - "lts/dubnium"
 
 install:
-    - cd ui
-    - yarn
+    - (cd ui && yarn)
 
 script:
-    - cd ui
-    - yarn lint
+    - (cd ui && yarn lint)
