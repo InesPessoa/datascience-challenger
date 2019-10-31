@@ -10,17 +10,17 @@ import {
 import 'rsuite/dist/styles/rsuite-default.css';
 
 import Navbar from '../../Components/Navbar/';
-import Question from '../../Components/Question';
+const Quiz = React.lazy(() => import('../../Components/Quiz/'));
 
 
-interface IQuestion {
+export interface IQuestion {
     id: number;
     groupId: number;
     level: number;
     question: string;
     answers: string[];
-    correctAnswers: number[];
-    totalPoints: number;
+    correct_answers: number[];
+    total_points: number;
 }
 interface IMainState {
     runningQuest: boolean;
@@ -45,7 +45,6 @@ class Main extends Component<{}, IMainState> {
 
     public render() {
         const { runningQuest, questions } = this.state;
-        const question = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas erat diam, volutpat sit amet nunc eget, volutpat mollis urna. Nullam maximus euismod turpis, non viverra sapien. In hac habitasse platea dictumst. Etiam tempor nisi interdum nunc hendrerit interdum. In tincidunt odio in erat consequat, a consectetur dolor fringilla.';
         return (
             <Container>
                 <Header>
@@ -53,13 +52,8 @@ class Main extends Component<{}, IMainState> {
                 </Header>
                 <Content style={{ margin: '5% 10%' }}>
                     <Button onClick={this.startQuest} appearance="primary">Open Quiz</Button>
-                    {runningQuest && <Question
-                        question={questions[0].question}
-                        answers={questions[0].answers}
-                        correct_answers={questions[0].correctAnswers}
-                    />}
+                    {runningQuest && <Quiz questions={questions}/>}
                 </Content>
-                <Footer>Footer</Footer>
             </Container>
         );
     }
