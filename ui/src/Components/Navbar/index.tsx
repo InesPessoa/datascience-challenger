@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 
-import { Dropdown, Icon, Nav, Navbar as NavbarRsuite } from 'rsuite';
+import { Avatar, Nav, Navbar as NavbarRsuite } from 'rsuite';
 
 
 class Navbar extends Component {
@@ -13,17 +13,10 @@ class Navbar extends Component {
                 </NavbarRsuite.Header>
                 <NavbarRsuite.Body>
                     <Nav>
-                        <Nav.Item icon={<Icon icon="home" />} >Home</Nav.Item>
-                        <Nav.Item>News</Nav.Item>
-                        <Nav.Item>Products</Nav.Item>
-                        <Dropdown title="About">
-                            <Dropdown.Item>Company</Dropdown.Item>
-                            <Dropdown.Item>Team</Dropdown.Item>
-                            <Dropdown.Item>Contact</Dropdown.Item>
-                        </Dropdown>
+                        <Nav.Item>Home</Nav.Item>
                     </Nav>
                     <Nav pullRight={true} >
-                        <Nav.Item icon={<Icon icon="cog" />} >Settings</Nav.Item>
+                        <Avatar circle={true} src="https://avatars2.githubusercontent.com/u/12592949?s=460&v=4" />
                     </Nav>
                 </NavbarRsuite.Body>
             </NavbarRsuite>
