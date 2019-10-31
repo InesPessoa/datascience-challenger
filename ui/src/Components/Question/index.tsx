@@ -11,14 +11,19 @@ import {
 } from 'rsuite';
 
 
+interface IQuestionProps {
+    question: string;
+    answers: string[];
+    correct_answers: number[];
+}
 interface IQuestionState {
     selectedAnswers: string[];
 }
-class Question extends Component<{}, IQuestionState> {
+class Question extends Component<IQuestionProps, IQuestionState> {
     constructor(props: any) {
         super(props);
         this.state = {
-            selectedAnswers: ['A', 'C'],
+            selectedAnswers: [],
         };
     }
     public handleChange = (value: any) => {
@@ -29,7 +34,7 @@ class Question extends Component<{}, IQuestionState> {
 
     public render() {
         const { selectedAnswers } = this.state;
-        const question = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas erat diam, volutpat sit amet nunc eget, volutpat mollis urna. Nullam maximus euismod turpis, non viverra sapien. In hac habitasse platea dictumst. Etiam tempor nisi interdum nunc hendrerit interdum. In tincidunt odio in erat consequat, a consectetur dolor fringilla.';
+        const { question, answers } = this.props;
         return (
             <React.Fragment>
                 <Form style={{maxWidth: '60%', margin: '0% 20%'}}>
@@ -42,10 +47,7 @@ class Question extends Component<{}, IQuestionState> {
                             value={selectedAnswers}
                             onChange={this.handleChange}
                         >
-                            <Checkbox value="A">Item A</Checkbox>
-                            <Checkbox value="B">Item B</Checkbox>
-                            <Checkbox value="C">Item C</Checkbox>
-                            <Checkbox value="D">Item D</Checkbox>
+                            {answers.map((answer) => <Checkbox key={answer} value={answer}>{answer}</Checkbox>)}
                         </CheckboxGroup>
                     </FormGroup>
                     <FormGroup>
