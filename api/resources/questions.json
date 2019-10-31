@@ -1,0 +1,25 @@
+{
+    "questions":
+    [
+        {
+            "id": 1,
+            "group_id": 1,
+            "level": 1,
+            "question": "Support Vector Machine is:",
+            "answers": ["normaly used for regression problems.",
+                        "normaly used for classification problems.",
+                        "is a supervised algorithm",
+                        "is an unsupervised algorithm"],
+            "correct_answers":[1,2],
+            "total_points": 10
+        }, 
+        {   "id": 2,
+            "group_id": 1,
+            "level":1,
+            "question": "During the training phase a separating hyperplane is calculated.",
+            "answers": ["True", "False"],
+            "correct_answers":[0],
+            "total_points": 10
+        }
+    ]
+}
