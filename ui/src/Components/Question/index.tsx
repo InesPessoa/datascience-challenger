@@ -15,6 +15,7 @@ interface IQuestionProps {
     question: string;
     answers: string[];
     correctAnswers: number[];
+    nextQuestion: (event: React.SyntheticEvent<Element, Event>) => void;
 }
 interface IQuestionState {
     selectedAnswers: number[];
@@ -31,6 +32,11 @@ class Question extends Component<IQuestionProps, IQuestionState> {
         };
     }
 
+    public goNext = (event: React.SyntheticEvent<Element, Event>) => {
+        this.setState({ selectedAnswers: [] });
+        this.props.nextQuestion(event);
+    }
+
     public handleChange = (value: any) => {
         this.setState({
             selectedAnswers: value,
@@ -41,18 +47,29 @@ class Question extends Component<IQuestionProps, IQuestionState> {
         const { selectedAnswers } = this.state;
         const comparison = this.props.correctAnswers.length === selectedAnswers.length
             && this.props.correctAnswers.every((v) => selectedAnswers.indexOf(v) !== -1);
-        this.setState({ submitDisabled: true });
-        if (comparison) {
-            console.log('success!');
-        } else {
-            console.log('failed!');
-        }
+        this.setState({ submitDisabled: true, success: comparison });
         event.preventDefault();
     }
 
     public render() {
-        const { selectedAnswers, submitDisabled } = this.state;
+        const { selectedAnswers, submitDisabled, success } = this.state;
         const { question, answers } = this.props;
+        const nextButton = (
+            <Button
+                appearance="primary"
+                onClick={this.goNext}
+            >
+                Next
+            </Button>
+        );
+        let resultStatus;
+        if (submitDisabled) {
+            if (success) {
+                resultStatus = 'Correct!';
+            } else {
+                resultStatus = 'Wrong!';
+            }
+        }
         return (
             <React.Fragment>
                 <Form style={{ maxWidth: '60%', margin: '0% 20%' }}>
@@ -68,17 +85,21 @@ class Question extends Component<IQuestionProps, IQuestionState> {
                             {answers.map((answer, index) => <Checkbox key={index} value={index}>{answer}</Checkbox>)}
                         </CheckboxGroup>
                     </FormGroup>
-                    <FormGroup>
-                        <ButtonToolbar>
-                            <Button
-                                appearance="primary"
-                                disabled={submitDisabled}
-                                onClick={this.handleSubmit}
-                            >
-                                Submit
-                            </Button>
-                        </ButtonToolbar>
-                    </FormGroup>
+                    <div>
+                        <FormGroup>
+                            <ButtonToolbar>
+                                <Button
+                                    appearance="primary"
+                                    disabled={submitDisabled}
+                                    onClick={this.handleSubmit}
+                                >
+                                    Submit
+                                </Button>
+                                {submitDisabled && nextButton}
+                            </ButtonToolbar>
+                        </FormGroup>
+                    </div>
+                    <h2>{resultStatus}</h2>
                 </Form>
             </React.Fragment>
         );

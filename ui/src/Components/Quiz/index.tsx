@@ -8,26 +8,34 @@ interface IQuizProps {
     questions: IQuestion[];
 }
 interface IQuizState {
-    //
+    currentQuestionNumber: number;
+    totalQuestions: number;
 }
 class Quiz extends Component<IQuizProps, IQuizState> {
     constructor(props: any) {
         super(props);
         this.state = {
-            selectedAnswers: [],
+            currentQuestionNumber: 0,
+            totalQuestions: this.props.questions.length,
         };
+    }
+
+    public nextQuestion = (event: React.SyntheticEvent<Element, Event>) => {
+        const { currentQuestionNumber } = this.state;
+        this.setState({ currentQuestionNumber: currentQuestionNumber + 1 });
+        event.preventDefault();
     }
 
     public render() {
         const { questions } = this.props;
+        const { currentQuestionNumber } = this.state;
         return (
-            <React.Fragment>
-                <Question
-                    question={questions[0].question}
-                    answers={questions[0].answers}
-                    correctAnswers={questions[0].correct_answers}
-                />
-            </React.Fragment>
+            <Question
+                question={questions[currentQuestionNumber].question}
+                answers={questions[currentQuestionNumber].answers}
+                correctAnswers={questions[currentQuestionNumber].correct_answers}
+                nextQuestion={this.nextQuestion}
+            />
         );
     }
 }
