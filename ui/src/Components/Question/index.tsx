@@ -9,13 +9,13 @@ import {
     FormGroup,
     Message,
 } from 'rsuite';
+import { QuizContext, IQuizContext } from '../Quiz';
 
 
 interface IQuestionProps {
     question: string;
     answers: string[];
     correctAnswers: number[];
-    nextQuestion: (event: React.SyntheticEvent<Element, Event>) => void;
 }
 interface IQuestionState {
     selectedAnswers: number[];
@@ -30,11 +30,6 @@ class Question extends Component<IQuestionProps, IQuestionState> {
             submitDisabled: false,
             success: undefined as any,
         };
-    }
-
-    public goNext = (event: React.SyntheticEvent<Element, Event>) => {
-        this.setState({ selectedAnswers: [] });
-        this.props.nextQuestion(event);
     }
 
     public handleChange = (value: any) => {
@@ -52,12 +47,25 @@ class Question extends Component<IQuestionProps, IQuestionState> {
     }
 
     public render() {
+        return (
+            <QuizContext.Consumer>
+                {(quizContext) => this.loadQuestion(quizContext)}
+            </QuizContext.Consumer>
+        );
+    }
+
+    private loadQuestion = (quizContext: IQuizContext) => {
         const { selectedAnswers, submitDisabled, success } = this.state;
         const { question, answers } = this.props;
+        //
+        const goNext = (event: React.SyntheticEvent<Element, Event>) => {
+            this.setState({ selectedAnswers: [], submitDisabled: false });
+            quizContext.handleGoNextQuestion(event);
+        };
         const nextButton = (
             <Button
                 appearance="primary"
-                onClick={this.goNext}
+                onClick={goNext}
             >
                 Next
             </Button>
@@ -71,37 +79,35 @@ class Question extends Component<IQuestionProps, IQuestionState> {
             }
         }
         return (
-            <React.Fragment>
-                <Form style={{ maxWidth: '60%', margin: '0% 20%' }}>
-                    <Message type="info" description={question} />
-                    <br />
+            <Form style={{ maxWidth: '60%', margin: '0% 20%' }}>
+                <Message type="info" description={question} />
+                <br />
+                <FormGroup>
+                    <CheckboxGroup
+                        inline={false}
+                        name="checkboxList"
+                        value={selectedAnswers}
+                        onChange={this.handleChange}
+                    >
+                        {answers.map((answer, index) => <Checkbox key={index} value={index}>{answer}</Checkbox>)}
+                    </CheckboxGroup>
+                </FormGroup>
+                <div>
                     <FormGroup>
-                        <CheckboxGroup
-                            inline={false}
-                            name="checkboxList"
-                            value={selectedAnswers}
-                            onChange={this.handleChange}
-                        >
-                            {answers.map((answer, index) => <Checkbox key={index} value={index}>{answer}</Checkbox>)}
-                        </CheckboxGroup>
+                        <ButtonToolbar>
+                            <Button
+                                appearance="primary"
+                                disabled={submitDisabled}
+                                onClick={this.handleSubmit}
+                            >
+                                Submit
+                            </Button>
+                            {submitDisabled && nextButton}
+                        </ButtonToolbar>
                     </FormGroup>
-                    <div>
-                        <FormGroup>
-                            <ButtonToolbar>
-                                <Button
-                                    appearance="primary"
-                                    disabled={submitDisabled}
-                                    onClick={this.handleSubmit}
-                                >
-                                    Submit
-                                </Button>
-                                {submitDisabled && nextButton}
-                            </ButtonToolbar>
-                        </FormGroup>
-                    </div>
-                    <h2>{resultStatus}</h2>
-                </Form>
-            </React.Fragment>
+                </div>
+                <h2>{resultStatus}</h2>
+            </Form>
         );
     }
 }

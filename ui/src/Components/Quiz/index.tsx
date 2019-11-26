@@ -4,25 +4,40 @@ import { IQuestion } from '../../Pages/Home';
 import Question from '../Question';
 
 
+export interface IQuizContext {
+    currentQuestionNumber: number;
+    totalQuestions: number;
+    handleGoNextQuestion: any;
+}
+export const QuizContext = React.createContext(
+    {
+        currentQuestionNumber : 0,
+        // tslint:disable-next-line: no-empty
+        handleGoNextQuestion: () => { },
+        totalQuestions: 0,
+    },
+);
+
 interface IQuizProps {
     questions: IQuestion[];
 }
-interface IQuizState {
-    currentQuestionNumber: number;
-    totalQuestions: number;
-}
-class Quiz extends Component<IQuizProps, IQuizState> {
+class Quiz extends Component<IQuizProps, IQuizContext> {
     constructor(props: any) {
         super(props);
         this.state = {
             currentQuestionNumber: 0,
+            handleGoNextQuestion: this.handleGoNextQuestion,
             totalQuestions: this.props.questions.length,
         };
     }
 
-    public nextQuestion = (event: React.SyntheticEvent<Element, Event>) => {
-        const { currentQuestionNumber } = this.state;
-        this.setState({ currentQuestionNumber: currentQuestionNumber + 1 });
+    public handleGoNextQuestion = (event: React.SyntheticEvent<Element, Event>) => {
+        const { currentQuestionNumber, totalQuestions } = this.state;
+        if (currentQuestionNumber === totalQuestions - 1) {
+            //
+        } else {
+            this.setState({ currentQuestionNumber: currentQuestionNumber + 1 });
+        }
         event.preventDefault();
     }
 
@@ -30,12 +45,13 @@ class Quiz extends Component<IQuizProps, IQuizState> {
         const { questions } = this.props;
         const { currentQuestionNumber } = this.state;
         return (
-            <Question
-                question={questions[currentQuestionNumber].question}
-                answers={questions[currentQuestionNumber].answers}
-                correctAnswers={questions[currentQuestionNumber].correct_answers}
-                nextQuestion={this.nextQuestion}
-            />
+            <QuizContext.Provider value={this.state}>
+                <Question
+                    question={questions[currentQuestionNumber].question}
+                    answers={questions[currentQuestionNumber].answers}
+                    correctAnswers={questions[currentQuestionNumber].correct_answers}
+                />
+            </QuizContext.Provider>
         );
     }
 }
