@@ -5,6 +5,7 @@ import {
     Content,
 } from 'rsuite';
 import 'rsuite/dist/styles/rsuite-default.css';
+import { IQuizResults } from '../../Components/Quiz';
 
 const Quiz = React.lazy(() => import('../../Components/Quiz/'));
 
@@ -18,6 +19,10 @@ class Main extends Component<{}, IMainState> {
         this.state = {
             runningQuest: false,
         };
+    }
+
+    public finishQuizCallback = () => {
+        this.setState({ runningQuest: false });
     }
 
     public render() {
@@ -37,7 +42,7 @@ class Main extends Component<{}, IMainState> {
             <Content style={{ margin: '5% 10%' }}>
                 <Content>
                     {!runningQuest && openQuizButton}
-                    {runningQuest && <Quiz />}
+                    {runningQuest && <Quiz finishQuizCallback={this.finishQuizCallback} />}
                 </Content>
             </Content>
         );

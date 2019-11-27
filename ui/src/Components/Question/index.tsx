@@ -9,7 +9,7 @@ import {
     FormGroup,
     Message,
 } from 'rsuite';
-import { QuizContext, IQuizContext } from '../Quiz';
+import { IQuizContext, QuizContext } from '../Quiz';
 
 
 interface IQuestionProps {
